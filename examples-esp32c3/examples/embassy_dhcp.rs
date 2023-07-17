@@ -19,6 +19,17 @@ use hal::clock::{ClockControl, CpuClock};
 use hal::Rng;
 use hal::{embassy, peripherals::Peripherals, prelude::*, timer::TimerGroup, Rtc};
 
+
+// use smoltcp::wire::Ipv4Address as Ipv44;
+
+use rust_mqtt::{
+    client::{client::MqttClient, client_config::{ClientConfig, MqttVersion}},
+    packet::v5::reason_codes::ReasonCode,
+    utils::rng_generator::CountingRng,
+};
+// use rust_mqtt::client::client_config::MqttVersion;
+use rust_mqtt::client::raw_client::RawMqttClient;
+
 #[cfg(any(feature = "esp32c3", feature = "esp32c2", feature = "esp32c6"))]
 use hal::system::SystemExt;
 
@@ -152,7 +163,7 @@ async fn task(stack: &'static Stack<WifiDevice<'static>>) {
 
         socket.set_timeout(Some(embassy_time::Duration::from_secs(10)));
 
-        let remote_endpoint = (Ipv4Address::new(142, 250, 185, 115), 80);
+        let remote_endpoint = (Ipv4Address::new(52, 57, 158, 144), 1883);
         println!("connecting...");
         let r = socket.connect(remote_endpoint).await;
         if let Err(e) = r {
@@ -160,6 +171,7 @@ async fn task(stack: &'static Stack<WifiDevice<'static>>) {
             continue;
         }
         println!("connected!");
+        println!("qwer!");
         let mut buf = [0; 1024];
         loop {
             use embedded_io::asynch::Write;
