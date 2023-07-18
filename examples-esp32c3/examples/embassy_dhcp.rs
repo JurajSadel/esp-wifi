@@ -165,36 +165,51 @@ async fn task(stack: &'static Stack<WifiDevice<'static>>) {
 
         let remote_endpoint = (Ipv4Address::new(52, 57, 158, 144), 1883);
         println!("connecting...");
-        let r = socket.connect(remote_endpoint).await;
-        if let Err(e) = r {
+        let connection = socket.connect(remote_endpoint).await;
+        if let Err(e) = connection {
             println!("connect error: {:?}", e);
             continue;
         }
         println!("connected!");
         println!("qwer!");
+
+        // TODO MQTT
+        let mut config = ClientConfig::new(
+            rust_mqtt::client::client_config::MqttVersion::MQTTv5,
+            CountingRng(20000),
+        );
+        config.add_max_subscribe_qos(rust_mqtt::packet::v5::publish_packet::QualityOfService::QoS1);
+        config.add_client_id("clientId-8rhWgBODCl");
+        // config.add_username(USERNAME);
+        // config.add_password(PASSWORD);
+        config.max_packet_size = 100;
+        let mut recv_buffer = [0; 80];
+        let mut write_buffer = [0; 80];
+
+        let mut client = MqttClient::<_, 5, _>::new(
+            socket,
+            &mut write_buffer,
+            80,
+            &mut recv_buffer,
+            80,
+            config,
+        );
+
+        client.connect_to_broker().await.unwrap();
+        client.subscribe_to_topic("testtopic/1");
+        println!("test");
         let mut buf = [0; 1024];
         loop {
-            use embedded_io::asynch::Write;
-            let r = socket
-                .write_all(b"GET / HTTP/1.0\r\nHost: www.mobile-j.de\r\n\r\n")
-                .await;
-            if let Err(e) = r {
-                println!("write error: {:?}", e);
-                break;
-            }
-            let n = match socket.read(&mut buf).await {
-                Ok(0) => {
-                    println!("read EOF");
-                    break;
-                }
-                Ok(n) => n,
-                Err(e) => {
-                    println!("read error: {:?}", e);
-                    break;
-                }
-            };
-            println!("{}", core::str::from_utf8(&buf[..n]).unwrap());
-        }
+            client
+            .send_message(
+                "testtopic/1",
+                b"Python3 sucks",
+                rust_mqtt::packet::v5::publish_packet::QualityOfService::QoS1,
+                true,
+            )
+            .await
+            .unwrap();
         Timer::after(Duration::from_millis(3000)).await;
+        }
     }
 }
