@@ -31,6 +31,11 @@ fn main() -> Result<()> {
         configure_linker_for_chip(&out, "esp32c6")?;
         copy_libraries(&out)?;
     }
+    #[cfg(feature = "esp32h2")]
+    {
+        configure_linker_for_chip(&out, "esp32h2")?;
+        copy_libraries(&out)?;
+    }
     #[cfg(feature = "esp32s2")]
     {
         configure_linker_for_chip(&out, "esp32s2")?;
@@ -192,6 +197,44 @@ fn copy_libraries(out: &PathBuf) -> Result<()> {
     println!("cargo:rustc-link-lib={}", "pp");
     println!("cargo:rustc-link-lib={}", "smartconfig");
     println!("cargo:rustc-link-lib={}", "wapi");
+    println!("cargo:rustc-link-lib={}", "wpa_supplicant");
+
+    Ok(())
+}
+
+#[cfg(feature = "esp32h2")]
+fn copy_libraries(out: &PathBuf) -> Result<()> {
+    copy_file(out, "libs/esp32h2/libble_app.a", "libble_app.a")?;
+    copy_file(out, "libs/esp32h2/libbtbb.a", "libbtbb.a")?;
+    copy_file(out, "libs/esp32h2/libcoexist.a", "libcoexist.a")?;
+
+    // copy_file(out, "libs/esp32h2/libcore.a", "libcore.a")?;
+    // copy_file(out, "libs/esp32h2/libespnow.a", "libespnow.a")?;
+    // copy_file(out, "libs/esp32h2/libmesh.a", "libmesh.a")?;
+    // copy_file(out, "libs/esp32h2/libnet80211.a", "libnet80211.a")?;
+
+    copy_file(out, "libs/esp32h2/libphy.a", "libphy.a")?;
+
+    // copy_file(out, "libs/esp32h2/libpp.a", "libpp.a")?;
+    // copy_file(out, "libs/esp32h2/libsmartconfig.a", "libsmartconfig.a")?;
+    // copy_file(out, "libs/esp32h2/libwapi.a", "libwapi.a")?;
+    copy_file(
+        out,
+        "libs/esp32h2/libwpa_supplicant.a",
+        "libwpa_supplicant.a",
+    )?;
+
+    println!("cargo:rustc-link-lib={}", "ble_app");
+    println!("cargo:rustc-link-lib={}", "btbb");
+    // println!("cargo:rustc-link-lib={}", "coexist");
+    println!("cargo:rustc-link-lib={}", "core");
+    // println!("cargo:rustc-link-lib={}", "espnow");
+    // println!("cargo:rustc-link-lib={}", "mesh");
+    // println!("cargo:rustc-link-lib={}", "net80211");
+    println!("cargo:rustc-link-lib={}", "phy");
+    // println!("cargo:rustc-link-lib={}", "pp");
+    // println!("cargo:rustc-link-lib={}", "smartconfig");
+    // println!("cargo:rustc-link-lib={}", "wapi");
     println!("cargo:rustc-link-lib={}", "wpa_supplicant");
 
     Ok(())

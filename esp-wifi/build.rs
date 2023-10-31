@@ -3,6 +3,7 @@
     feature = "esp32c2",
     feature = "esp32c3",
     feature = "esp32c6",
+    feature = "esp32h2",
     feature = "esp32s2",
     feature = "esp32s3",
 ))]
@@ -36,7 +37,7 @@ fn main() -> Result<(), String> {
         Ok(level) => {
             if level != "2" && level != "3" {
                 let message = format!(
-                    "esp-wifi should be built with optimization level 2 or 3 - yours is {level}. 
+                    "esp-wifi should be built with optimization level 2 or 3 - yours is {}.
                     See https://github.com/esp-rs/esp-wifi",
                 );
                 print_warning(message);
@@ -56,6 +57,9 @@ fn main() -> Result<(), String> {
 
     #[cfg(feature = "esp32c6")]
     println!("cargo:rustc-cfg=esp32c6");
+
+    #[cfg(feature = "esp32h2")]
+    println!("cargo:rustc-cfg=esp32h2");
 
     #[cfg(feature = "esp32s2")]
     println!("cargo:rustc-cfg=esp32s2");
@@ -120,6 +124,7 @@ fn main() -> Result<(), String> {
     feature = "esp32c2",
     feature = "esp32c3",
     feature = "esp32c6",
+    feature = "esp32h2",
     feature = "esp32s2",
     feature = "esp32s3",
 )))]
