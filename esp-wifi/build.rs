@@ -37,7 +37,7 @@ fn main() -> Result<(), String> {
         Ok(level) => {
             if level != "2" && level != "3" {
                 let message = format!(
-                    "esp-wifi should be built with optimization level 2 or 3 - yours is {}.
+                    "esp-wifi should be built with optimization level 2 or 3 - yours is {level}.
                     See https://github.com/esp-rs/esp-wifi",
                 );
                 print_warning(message);

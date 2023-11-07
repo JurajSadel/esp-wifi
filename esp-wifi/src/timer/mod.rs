@@ -17,11 +17,16 @@ pub use chip_specific::*;
 pub fn setup_timer_isr(timebase: TimeBase) {
     setup_radio_isr();
 
+    info!("blabla");
+
     setup_timer(timebase);
+
+    info!("jgjgjgj");
 
     setup_multitasking();
 
     yield_task();
+    info!("fhdgetert");
 }
 
 #[allow(unused)]

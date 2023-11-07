@@ -61,6 +61,7 @@ pub fn setup_multitasking() {
 fn SYSTIMER_TARGET0(trap_frame: &mut TrapFrame) {
     // clear the systimer intr
     critical_section::with(|cs| {
+        // unwrap!(ALARM0.borrow_ref_mut(cs).as_mut()).interrupt_clear();
         unwrap!(ALARM0.borrow_ref_mut(cs).as_mut()).clear_interrupt();
     });
 

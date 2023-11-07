@@ -227,7 +227,7 @@ fn copy_libraries(out: &PathBuf) -> Result<()> {
     println!("cargo:rustc-link-lib={}", "ble_app");
     println!("cargo:rustc-link-lib={}", "btbb");
     // println!("cargo:rustc-link-lib={}", "coexist");
-    println!("cargo:rustc-link-lib={}", "core");
+    // println!("cargo:rustc-link-lib={}", "core");
     // println!("cargo:rustc-link-lib={}", "espnow");
     // println!("cargo:rustc-link-lib={}", "mesh");
     // println!("cargo:rustc-link-lib={}", "net80211");

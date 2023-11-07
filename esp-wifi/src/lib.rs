@@ -258,12 +258,15 @@ pub fn initialize(
     #[cfg(esp32c2)]
     const MAX_CLOCK: u32 = 120;
 
+    #[cfg(esp32h2)]
+    const MAX_CLOCK: u32 = 96;
+
     if clocks.cpu_clock != MegahertzU32::MHz(MAX_CLOCK) {
         return Err(InitializationError::WrongClockConfig);
     }
 
     #[cfg(esp32h2)]
-    if clocks.cpu_clock != MegahertzU32::MHz(96) {
+    if clocks.cpu_clock != MegahertzU32::MHz(MAX_CLOCK) {
         return Err(InitializationError::WrongClockConfig);
     }
 
@@ -283,13 +286,22 @@ pub fn initialize(
 
     crate::common_adapter::chip_specific::enable_wifi_power_domain();
 
+    info!("nuna, nula, nula");
+
     init_heap();
+    info!("1");
     phy_mem_init();
+    info!("2");
     init_radio_clock_control(radio_clocks);
+    info!("3");
     init_rng(rng);
+    info!("4");
     init_tasks();
+    info!("5");
     setup_timer_isr(timer);
+    info!("6");
     wifi_set_log_verbose();
+    info!("7");
     init_clocks();
 
     #[cfg(coex)]
