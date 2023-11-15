@@ -428,6 +428,7 @@ unsafe extern "C" fn custom_queue_create(
 }
 
 pub(crate) fn ble_init() {
+    log::info!("btdm");
     unsafe {
         *(HCI_OUT_COLLECTOR.as_mut_ptr()) = HciOutCollector::new();
         // turn on logging
